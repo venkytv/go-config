@@ -4,8 +4,8 @@ Simple config wrapper over [viper](https://github.com/spf13/viper), customised p
 
 Loads config from:
    - command line flags
-	 - environment variables (upper-cased flag values, hyphens replaced by underscores)
-	 - YAML config file in `~/.config/<binary-name>`
+   - environment variables (upper-cased flag values, hyphens replaced by underscores)
+   - YAML config file in `~/.config/<binary-name>`
 
 Example:
 ```go
