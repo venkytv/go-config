@@ -16,15 +16,20 @@ import (
 	"github.com/venkytv/go-config"
 )
 
+func printVal(cfg *config.Config) {
+  fmt.Println(cfg.GetString("test-val"))
+}
+
 func main() {
 	flag.String("test-val", "123", "help for test")
 	cfg := config.Load(nil, "FOO")
-	fmt.Println(cfg.GetString("test-val"))
+	printVal(cfg)
 }
 ```
 
 Usage:
 ```shell
-./testprog --test foo
+./testprog --test-val foo
 FOO_TEST_VAL=bar ./testprog
+mkdir -p ~/.config/testprog && echo "test-val: baz" >~/.config/testprog/config.yml && ./testprog
 ```
