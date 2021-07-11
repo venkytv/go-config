@@ -10,16 +10,28 @@ import (
 	"github.com/spf13/viper"
 )
 
-type Config = viper.Viper
+type Config struct {
+	*viper.Viper
+	Pflag *pflag.FlagSet
+}
 
-func Load(flagset *flag.FlagSet, prefix string) *viper.Viper {
+func (cfg *Config) Args() []string {
+	if !cfg.Pflag.Parsed() {
+		panic("Config not loaded")
+	}
+	return cfg.Pflag.Args()
+}
+
+func Load(flagset *flag.FlagSet, prefix string) *Config {
 	if flagset == nil {
 		flagset = flag.CommandLine
 	}
-	pflag.CommandLine.AddGoFlagSet(flagset)
-	pflag.Parse()
+	pf := pflag.NewFlagSet(os.Args[0], pflag.ExitOnError)
+	pf.AddGoFlagSet(flagset)
+	pf.Parse(os.Args[1:])
 	v := viper.New()
-	v.BindPFlags(pflag.CommandLine)
+	cfg := &Config{v, pf}
+	v.BindPFlags(pf)
 	if len(prefix) > 0 {
 		v.SetEnvPrefix(prefix)
 	}
@@ -40,5 +52,5 @@ func Load(flagset *flag.FlagSet, prefix string) *viper.Viper {
 		}
 	}
 
-	return v
+	return cfg
 }
